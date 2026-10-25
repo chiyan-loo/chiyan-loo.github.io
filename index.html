@@ -8,6 +8,9 @@
   <title>chiyan loo</title>
   <meta name="description" content="chiyan loo — student, ml research, software." />
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23ececec'/%3E%3Ctext x='16' y='16' fill='%230c0c0c' font-family='Helvetica,Arial,sans-serif' font-size='20' font-weight='500' text-anchor='middle' dominant-baseline='central'%3Ec%3C/text%3E%3C/svg%3E" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300..600;1,6..72,300..600&display=swap" />
   <style>
     :root {
       --bg: #0c0c0c;
@@ -17,7 +20,7 @@
       --rule: #232323;
       --rule-strong: #3a3a3a;
       --accent: #7dd3a8;
-      --font: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+      --font: "Newsreader", Georgia, "Times New Roman", serif;
       --ease: cubic-bezier(.4, 0, .2, 1);
       color-scheme: dark;
     }
@@ -29,8 +32,8 @@
       background: var(--bg);
       color: var(--fg);
       font-family: var(--font);
-      font-size: 0.9375rem;
-      line-height: 1.65;
+      font-size: 1.125rem;
+      line-height: 1.6;
       -webkit-font-smoothing: antialiased;
     }
     h1, h2, p { margin: 0; font-size: inherit; font-weight: 400; }
@@ -42,7 +45,7 @@
     .page {
       position: relative;
       z-index: 1;
-      max-width: 620px;
+      max-width: 780px;
       margin: 0 auto;
       padding: 2.5rem 1.5rem 6rem;
     }
@@ -56,7 +59,6 @@
 
     /* intro */
     .intro { margin-top: 7rem; }
-    .intro h1 { margin-bottom: 2rem; }
     .intro p + p { margin-top: 1.25rem; }
     .intro .muted { color: var(--muted); }
 
@@ -86,7 +88,7 @@
     .icons { display: flex; gap: 1rem; align-items: center; }
     .icons a { color: var(--muted); display: inline-flex; transition: color .16s var(--ease), transform .16s var(--ease); }
     .icons a:hover { color: var(--fg); transform: translateY(-1px); }
-    .icons svg { width: 17px; height: 17px; fill: currentColor; }
+    .icons svg { width: 20px; height: 20px; fill: currentColor; }
 
 
     /* warm glow at the bottom of the viewport */
@@ -109,6 +111,7 @@
     }
 
     @media (max-width: 520px) {
+      body { font-size: 1.0625rem; }
       .intro { margin-top: 5rem; }
     }
   </style>
@@ -133,7 +136,7 @@
     </header>
 
     <section class="intro">
-      <h1>hi, I'm Chiyan.</h1>
+      <p>hi, I'm Chiyan.</p>
       <p>
         I'm a student interested in machine learning and reasoning models. I like reading papers and running experiments to see what actually works.
       </p>
