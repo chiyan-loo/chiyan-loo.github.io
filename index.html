@@ -1,80 +1,150 @@
-
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Chiyan Loo</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0c0c0c" />
+  <meta name="color-scheme" content="dark" />
+  <title>chiyan loo</title>
+  <meta name="description" content="chiyan loo — student, ml research, software." />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23ececec'/%3E%3Ctext x='16' y='16' fill='%230c0c0c' font-family='Helvetica,Arial,sans-serif' font-size='20' font-weight='500' text-anchor='middle' dominant-baseline='central'%3Ec%3C/text%3E%3C/svg%3E" />
   <style>
+    :root {
+      --bg: #0c0c0c;
+      --fg: #ececec;
+      --muted: #8a8a8a;
+      --faint: #5e5e5e;
+      --rule: #232323;
+      --rule-strong: #3a3a3a;
+      --accent: #7dd3a8;
+      --font: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+      --ease: cubic-bezier(.4, 0, .2, 1);
+      color-scheme: dark;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
     body {
-      max-width: 760px;
-      margin: 70px auto;
-      padding: 0 24px;
-      font-family: Arial, sans-serif;
-      color: #222;
-      line-height: 1.7;
-      background: #fff;
+      margin: 0;
+      background: var(--bg);
+      color: var(--fg);
+      font-family: var(--font);
+      font-size: 0.9375rem;
+      line-height: 1.65;
+      -webkit-font-smoothing: antialiased;
     }
-    nav { margin-bottom: 40px; }
-    nav a { margin-right: 18px; color: #555; }
-    a { color: #2457a7; }
-    h1 { margin-bottom: 4px; }
-    h2 {
-      margin-top: 38px;
-      border-bottom: 1px solid #eee;
-      padding-bottom: 7px;
+    h1, h2, p { margin: 0; font-size: inherit; font-weight: 400; }
+    a { color: inherit; text-decoration: none; }
+    ::selection { background: var(--fg); color: var(--bg); }
+    :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 2px; }
+    [id] { scroll-margin-top: 3rem; }
+
+    .page {
+      position: relative;
+      z-index: 1;
+      max-width: 620px;
+      margin: 0 auto;
+      padding: 2.5rem 1.5rem 6rem;
     }
-    .muted { color: #777; }
-    .project { margin: 24px 0; }
+
+    /* header */
+    .header { display: flex; justify-content: space-between; align-items: center; gap: 1.5rem; }
+    .header nav { display: flex; gap: 1.125rem; }
+    .header a { transition: color .16s var(--ease); }
+    .header nav a { color: var(--muted); }
+    .header a:hover { color: var(--fg); }
+
+    /* intro */
+    .intro { margin-top: 7rem; }
+    .intro h1 { margin-bottom: 2rem; }
+    .intro p + p { margin-top: 1.25rem; }
+    .intro .muted { color: var(--muted); }
+
+    .link {
+      text-decoration: underline;
+      text-decoration-color: var(--rule-strong);
+      text-underline-offset: 3px;
+      transition: text-decoration-color .16s var(--ease);
+    }
+    .link:hover { text-decoration-color: var(--fg); }
+
+    .status {
+      display: inline-flex; align-items: center; gap: .5rem;
+      color: var(--muted);
+    }
+    .status::before {
+      content: ""; width: 6px; height: 6px; border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 8px var(--accent);
+    }
+
+    /* contact */
+    .contact { margin-top: 5rem; color: var(--muted); }
+    .contact a { color: var(--fg); }
+    .contact .sep { color: var(--faint); margin: 0 .5rem; }
+
+    .icons { display: flex; gap: 1rem; align-items: center; }
+    .icons a { color: var(--muted); display: inline-flex; transition: color .16s var(--ease), transform .16s var(--ease); }
+    .icons a:hover { color: var(--fg); transform: translateY(-1px); }
+    .icons svg { width: 17px; height: 17px; fill: currentColor; }
+
+
+    /* warm glow at the bottom of the viewport */
+    .glow {
+      position: fixed; inset: auto 0 0 0; height: 70vh;
+      pointer-events: none; z-index: 0;
+      background:
+        radial-gradient(90% 75% at 50% 118%, rgba(255, 170, 90, .13), transparent 62%),
+        radial-gradient(140% 95% at 50% 130%, rgba(222, 126, 64, .08), transparent 66%);
+      transform-origin: bottom;
+      animation: breathe 12s ease-in-out infinite;
+    }
+    @keyframes breathe {
+      0%, 100% { opacity: .6; transform: scaleY(.8); }
+      50% { opacity: 1; transform: scaleY(1.15); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      .glow { animation: none; opacity: .8; }
+    }
+
+    @media (max-width: 520px) {
+      .intro { margin-top: 5rem; }
+    }
   </style>
 </head>
 <body>
-  <nav>
-    <a href="#about">About</a>
-    <a href="#research">Research</a>
-    <a href="#projects">Projects</a>
-    <a href="#contact">Contact</a>
-  </nav>
+  <div class="glow" aria-hidden="true"></div>
 
-  <h1>Your Name</h1>
-  <p class="muted">Student · ML Research · Software Engineering</p>
+  <main class="page">
+    <header class="header">
+      <a href="/">chiyan loo</a>
+      <nav class="icons" aria-label="contact">
+        <a href="mailto:loochiyan@gmail.com" aria-label="email">
+          <svg viewBox="0 0 24 24"><path d="M3 5h18a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1Zm1 2.3V17h16V7.3l-8 5.6-8-5.6ZM5.4 7l6.6 4.6L18.6 7H5.4Z"/></svg>
+        </a>
+        <a href="https://github.com/chiyan-loo" aria-label="github">
+          <svg viewBox="0 0 24 24"><path d="M12 .5a11.5 11.5 0 0 0-3.64 22.41c.58.1.79-.25.79-.56v-2c-3.2.7-3.88-1.36-3.88-1.36-.52-1.33-1.28-1.68-1.28-1.68-1.05-.72.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.28 1.19-3.09-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.17 1.18a11 11 0 0 1 5.77 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.83 1.19 3.09 0 4.42-2.69 5.39-5.26 5.68.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 12 .5Z"/></svg>
+        </a>
+        <a href="https://www.linkedin.com/in/chiyan-loo/" aria-label="linkedin">
+          <svg viewBox="0 0 24 24"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.34V9h3.42v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28ZM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13ZM7.12 20.45H3.56V9h3.56v11.45ZM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0Z"/></svg>
+        </a>
+      </nav>
+    </header>
 
-  <section id="about">
-    <h2>About</h2>
-    <p>
-      Hi! I'm a student interested in machine learning,
-      reasoning models, and building useful AI systems.
-      I enjoy reading research papers and running experiments.
-    </p>
-  </section>
-
-  <section id="research">
-    <h2>Research</h2>
-    <div class="project">
-      <strong>Your Research Project</strong>
+    <section class="intro">
+      <h1>hi, I'm Chiyan.</h1>
       <p>
-        A short explanation of the research question,
-        approach, and findings.
+        I'm a student interested in machine learning and reasoning models. I like reading papers and running experiments to see what actually works.
       </p>
-      <a href="#">Paper / Write-up</a>
-    </div>
-  </section>
+    </section>
 
-  <section id="projects">
-    <h2>Projects</h2>
-    <div class="project">
-      <strong>Project Name</strong>
-      <p>What you built, how it works, and why it matters.</p>
-      <a href="https://github.com/">GitHub Repository</a>
-    </div>
-  </section>
-
-  <section id="contact">
-    <h2>Contact</h2>
-    <p>
-      Email: your-email@example.com<br>
-      GitHub: <a href="https://github.com/">Profile</a>
+    <p class="contact">
+      want to chat? <a class="link" href="mailto:loochiyan@gmail.com">send me an email</a>
+      <span class="sep">/</span><a class="link" href="https://github.com/chiyan-loo">github</a>
+      <span class="sep">/</span><a class="link" href="https://www.linkedin.com/in/chiyan-loo/">linkedin</a>
     </p>
-  </section>
+
+  </main>
 </body>
 </html>
