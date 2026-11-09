@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0c0c0c" media="(prefers-color-scheme: dark)" />
+  <meta name="theme-color" content="#f6f4ef" media="(prefers-color-scheme: light)" />
+  <meta name="color-scheme" content="dark light" />
+  <title>blog — chiyan loo</title>
+  <meta name="description" content="chiyan loo's blog — documenting my learning." />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23ececec'/%3E%3Ctext x='16' y='16' fill='%230c0c0c' font-family='Helvetica,Arial,sans-serif' font-size='20' font-weight='500' text-anchor='middle' dominant-baseline='central'%3Ec%3C/text%3E%3C/svg%3E" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300..600;1,6..72,300..600&display=swap" />
+  <script>
+    try { var t = localStorage.getItem("theme"); if (t === "light" || t === "dark") document.documentElement.dataset.theme = t; } catch (e) {}
+  </script>
+  <style>
+    :root {
+      --bg: #0c0c0c;
+      --fg: #ececec;
+      --muted: #8a8a8a;
+      --faint: #5e5e5e;
+      --rule: #232323;
+      --rule-strong: #3a3a3a;
+      --accent: #7dd3a8;
+      --font: "Newsreader", Georgia, "Times New Roman", serif;
+      --ease: cubic-bezier(.4, 0, .2, 1);
+      --glow-1: rgba(255, 170, 90, .13);
+      --glow-2: rgba(222, 126, 64, .08);
+      --show-sun: block;
+      --show-moon: none;
+      color-scheme: dark;
+    }
+    @media (prefers-color-scheme: light) {
+      :root:not([data-theme="dark"]) {
+        --bg: #f6f4ef;
+        --fg: #1b1b1b;
+        --muted: #6a6a6a;
+        --faint: #9a9792;
+        --rule: #e3e0d9;
+        --rule-strong: #c6c2b9;
+        --accent: #2f8a5f;
+        --glow-1: rgba(240, 140, 60, .16);
+        --glow-2: rgba(222, 110, 50, .08);
+        --show-sun: none;
+        --show-moon: block;
+        color-scheme: light;
+      }
+    }
+    :root[data-theme="light"] {
+      --bg: #f6f4ef;
+      --fg: #1b1b1b;
+      --muted: #6a6a6a;
+      --faint: #9a9792;
+      --rule: #e3e0d9;
+      --rule-strong: #c6c2b9;
+      --accent: #2f8a5f;
+      --glow-1: rgba(240, 140, 60, .16);
+      --glow-2: rgba(222, 110, 50, .08);
+      --show-sun: none;
+      --show-moon: block;
+      color-scheme: light;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+    html { -webkit-text-size-adjust: 100%; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--fg);
+      font-family: var(--font);
+      font-size: 1.125rem;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      transition: background-color .2s var(--ease), color .2s var(--ease);
+    }
+    h1, h2, p { margin: 0; font-size: inherit; font-weight: 400; }
+    a { color: inherit; text-decoration: none; }
+    ul { margin: 0; padding: 0; list-style: none; }
+    ::selection { background: var(--fg); color: var(--bg); }
+    :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 2px; }
+
+    .page {
+      position: relative;
+      z-index: 1;
+      max-width: 780px;
+      margin: 0 auto;
+      padding: 2.5rem 1.5rem 6rem;
+    }
+
+    /* header */
+    .header { display: flex; justify-content: space-between; align-items: center; gap: 1.5rem; }
+    .header nav { display: flex; gap: 1.125rem; }
+    .header a { transition: color .16s var(--ease); }
+    .header nav a { color: var(--muted); }
+    .header a:hover { color: var(--fg); }
+    .brand { display: flex; align-items: center; gap: .75rem; }
+    .theme-toggle {
+      display: inline-flex; padding: 0; border: 0; background: none; cursor: pointer;
+      color: var(--muted); transition: color .16s var(--ease);
+    }
+    .theme-toggle:hover { color: var(--fg); }
+    .theme-toggle svg { width: 17px; height: 17px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+    .theme-toggle .sun { display: var(--show-sun); }
+    .theme-toggle .moon { display: var(--show-moon); }
+
+    .icons { display: flex; gap: 1rem; align-items: center; }
+    .icons a { color: var(--muted); display: inline-flex; transition: color .16s var(--ease), transform .16s var(--ease); }
+    .icons a:hover { color: var(--fg); transform: translateY(-1px); }
+    .icons svg { width: 20px; height: 20px; fill: currentColor; }
+    .icons a.text:hover { transform: none; }
+    .icons a[aria-current="page"] { color: var(--fg); }
+
+    /* intro */
+    .intro { margin-top: 7rem; }
+    .intro p + p { margin-top: 1.25rem; }
+    .intro .muted { color: var(--muted); }
+
+    /* posts */
+    .posts { margin-top: 4rem; border-top: 1px solid var(--rule); }
+    .posts li { border-bottom: 1px solid var(--rule); }
+    .posts a {
+      display: flex; justify-content: space-between; align-items: baseline; gap: 1.5rem;
+      padding: 1rem 0;
+      transition: color .16s var(--ease);
+    }
+    .posts a:hover { color: var(--accent); }
+    .posts time { color: var(--faint); font-variant-numeric: tabular-nums; white-space: nowrap; }
+    .empty { padding: 1rem 0; color: var(--faint); font-style: italic; }
+
+    /* warm glow at the bottom of the viewport */
+    .glow {
+      position: fixed; inset: auto 0 0 0; height: 70vh;
+      pointer-events: none; z-index: 0;
+      background:
+        radial-gradient(90% 75% at 50% 118%, var(--glow-1), transparent 62%),
+        radial-gradient(140% 95% at 50% 130%, var(--glow-2), transparent 66%);
+      transform-origin: bottom;
+      animation: breathe 12s ease-in-out infinite;
+    }
+    @keyframes breathe {
+      0%, 100% { opacity: .6; transform: scaleY(.8); }
+      50% { opacity: 1; transform: scaleY(1.15); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .glow { animation: none; opacity: .8; }
+    }
+
+    @media (max-width: 520px) {
+      body { font-size: 1.0625rem; }
+      .intro { margin-top: 5rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="glow" aria-hidden="true"></div>
+
+  <main class="page">
+    <header class="header">
+      <div class="brand">
+        <a href="/">chiyan loo</a>
+        <button class="theme-toggle" type="button" aria-label="toggle light/dark mode">
+          <svg class="sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+          <svg class="moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z"/></svg>
+        </button>
+      </div>
+      <nav class="icons" aria-label="contact">
+        <a href="/" class="text">about</a>
+        <a href="/blog/" class="text" aria-current="page">blog</a>
+        <a href="mailto:loochiyan@gmail.com" aria-label="email">
+          <svg viewBox="0 0 24 24"><path d="M3 5h18a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1Zm1 2.3V17h16V7.3l-8 5.6-8-5.6ZM5.4 7l6.6 4.6L18.6 7H5.4Z"/></svg>
+        </a>
+        <a href="https://github.com/chiyan-loo" aria-label="github">
+          <svg viewBox="0 0 24 24"><path d="M12 .5a11.5 11.5 0 0 0-3.64 22.41c.58.1.79-.25.79-.56v-2c-3.2.7-3.88-1.36-3.88-1.36-.52-1.33-1.28-1.68-1.28-1.68-1.05-.72.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.28 1.19-3.09-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.17 1.18a11 11 0 0 1 5.77 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.83 1.19 3.09 0 4.42-2.69 5.39-5.26 5.68.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 12 .5Z"/></svg>
+        </a>
+        <a href="https://www.linkedin.com/in/chiyan-loo/" aria-label="linkedin">
+          <svg viewBox="0 0 24 24"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.34V9h3.42v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28ZM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13ZM7.12 20.45H3.56V9h3.56v11.45ZM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0Z"/></svg>
+        </a>
+      </nav>
+    </header>
+
+    <section class="intro">
+      <p class="muted">
+        I plan to documenting my learning: notes on post training, reasoning models, and whatever else I'm working through.
+      </p>
+    </section>
+
+    <!--
+      add posts here, newest first:
+      <li><a href="/blog/post-slug/"><span>post title</span><time datetime="2026-11-08">nov 8, 2026</time></a></li>
+    -->
+    <ul class="posts">
+      <li class="empty">no posts yet.</li>
+    </ul>
+  </main>
+
+  <script>
+    (function () {
+      var root = document.documentElement;
+      var mq = window.matchMedia("(prefers-color-scheme: light)");
+      document.querySelector(".theme-toggle").addEventListener("click", function () {
+        var system = mq.matches ? "light" : "dark";
+        var next = (root.dataset.theme || system) === "light" ? "dark" : "light";
+        try {
+          // choosing the system theme clears the override so the page follows the OS again
+          if (next === system) localStorage.removeItem("theme"); else localStorage.setItem("theme", next);
+        } catch (e) {}
+        if (next === system) delete root.dataset.theme; else root.dataset.theme = next;
+      });
+    })();
+  </script>
+</body>
+</html>
