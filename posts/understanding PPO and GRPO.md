@@ -1,5 +1,5 @@
 ---
-title: "Understanding PPO and GRPO: Deriving Objectives "
+title: "Understanding PPO and GRPO"
 date: 2026-11-06
 description: A walkthrough of PPO and GRPO mathematical foundations, exploring how their objective functions are derived and how it works.
 ---
@@ -14,15 +14,15 @@ I have been familiar with GRPO for a while for training reasoning models, but I 
 In reinforcement learning, we have the language model as our agent interacting with the environment. The state is the prompt and all previously generated tokens. The action is generating the next token. The reward is a score assigned to each response. The agent has stochastic policy $\pi_\theta$ which determines the probability distribution of actions taken at the current state. 
 
 The objective is to maximize expected value of the reward of the policy:
-$$J(\theta) = \mathbb{E}_{x,y\sim\pi_\theta}[R(x,y)]$$
-where $x$ is the input prompt $y$ is the generated response and $R(x,y)$ is the reward.
+$$J(\theta) = \mathbb{E}_{x\sim\mathcal{D},\,y\sim\pi_\theta(\cdot|x)}[R(x,y)]$$
+where $x$ is the input prompt sampled from the dataset $\mathcal{D}$, $y$ is the generated response and $R(x,y)$ is the reward.
 
 
 ## PPO
 
-Traditional policy gradient methods like REINFORCE lead to unstable training because a single gradient step can drastically change the policy gradient. If the gradient update is too large, it can lead to a collapse in performance and greatly change the model's behavior. 
+Traditional policy gradient methods like REINFORCE lead to unstable training because a single gradient step can drastically change the policy. If the gradient update is too large, it can lead to a collapse in performance and greatly change the model's behavior. 
 
-PPO solves this by imposing a clipping function to the objective. This constrains how much a policy can change from a single update.
+PPO solves this by imposing a clipping function to the objective. This limits how much a single update can affect the policy.
 
 ### Advantage function
 
@@ -43,11 +43,11 @@ This ratio shows how far the new policy has changed and in which direction. For 
 
 ### Clipped surrogate objective
 
-Now that we have an advantage that tells us what change is desirable and a probability ratio that tells us how much the policy has changed, we can use them in the objective TRPO maximizes:
+Now that we have an advantage that tells us what change is desirable and a probability ratio that tells us how much the policy has changed, we can use them in the surrogate objective that TRPO maximizes:
 
 $$L^{CPI}(\theta)=\mathbb{E}_t[r_t(\theta)A_t]$$
 
-The superscript CPI refers to conservative policy iteration, where this objective was proposed. We can modify this objective to clip excessively large policy updates, making PPO's objective: 
+TRPO maximizes this subject to a constraint on the KL divergence between the old and new policies. The superscript CPI refers to conservative policy iteration, where this objective was proposed. Instead of a hard KL constraint, we can modify this objective to clip excessively large policy updates, making PPO's objective: 
 
 $$
 L^{CLIP}(\theta)=
@@ -98,16 +98,16 @@ Instead of estimating an advantage using a learned value function, GRPO simply e
 
 ### Advantage function
 Given a query $q$, the policy generates a group of $G$ responses:
-${o_1,o_2,\ldots,o_G}$
+$\{o_1,o_2,\ldots,o_G\}$
 
 Each response receives a reward:
-${r_1,r_2,\ldots,r_G}$
+$\{r_1,r_2,\ldots,r_G\}$
 
 Now we get the advantage of each response by comparing the rewards of each response to the rewards of other responses in the group. This is basically a z score.
 
 $$A_i = \frac{r_i-\operatorname{mean}(\{r_1,\ldots,r_G\})}{\operatorname{std}(\{r_1,\ldots,r_G\})}$$
 
-This estimates the advantage without training a separate critic model. 
+This estimates the advantage without training a separate critic model. Since the reward is given only at the end of each response (outcome supervision), every token in response $o_i$ gets the same advantage: $A_{i,t} = A_i$.
 
 ### The GRPO objective
 
@@ -116,17 +116,32 @@ GRPO keeps PPO's clipped objective, but replaces PPO's advantage estimation with
 The policy model is optimized by maximizing the following objective:
 $$
 J_{GRPO}(\theta)=
-\mathbb{E}[
+\mathbb{E}_{q\sim P(Q),\,\{o_i\}_{i=1}^{G}\sim\pi_{\theta_{\text{old}}}(\cdot|q)}[
 \frac{1}{G}\sum_{i=1}^{G}
 \frac{1}{|o_i|}\sum_{t=1}^{|o_i|}
-(\min(r_{i,t}A_{i,t},\operatorname{clip}(r_{i,t},1-\epsilon,1+\epsilon)A_{i,t})-\beta D_{KL})]
+(\min(\rho_{i,t}A_{i,t},\operatorname{clip}(\rho_{i,t},1-\epsilon,1+\epsilon)A_{i,t})-\beta D_{KL}[\pi_\theta\|\pi_{\text{ref}}])]
 $$
 
-Note that, It also uses a KL penalty to discourage the policy from drifting too far from the reference model. Instead of adding KL penalty in the reward, it is applied to the objective directly to avoid complicating calculation of the advantage.  
+where $\rho_{i,t}$ is the per-token probability ratio (written as $\rho$ here to avoid confusion with the rewards $r_i$):
+$$\rho_{i,t}=\frac{\pi_\theta(o_{i,t}|q,o_{i,<t})}{\pi_{\theta_{\text{old}}}(o_{i,t}|q,o_{i,<t})}$$
+
+and the KL divergence is estimated per token with an unbiased estimator:
+$$D_{KL}[\pi_\theta\|\pi_{\text{ref}}]=\frac{\pi_{\text{ref}}(o_{i,t}|q,o_{i,<t})}{\pi_\theta(o_{i,t}|q,o_{i,<t})}-\log\frac{\pi_{\text{ref}}(o_{i,t}|q,o_{i,<t})}{\pi_\theta(o_{i,t}|q,o_{i,<t})}-1$$
+
+Note that, It uses a KL penalty to discourage the policy from drifting too far from the reference model. Instead of adding KL penalty in the reward, it is applied to the objective directly to avoid complicating calculation of the advantage.  
 
 ## My Takeaways
 
-I like how simple yet effective GRPO is. It has become a main training mechanism for reasoning LLMs on problems with verifiable answers and has greatly accelerated LLM progress into the models we have today. However, there are still limitations, such as when all responses in a group recieves the same reward or its sparse rewards, that many researchers are exploring. 
+I like how simple yet effective GRPO is. It has become a main training mechanism for reasoning LLMs on problems with verifiable answers and has accelerated LLM progress into the models we have today. However, there are still limitations, such as when all responses in a group recieves the same reward or its sparse rewards, that many researchers are exploring. 
 
 I think this deep dive into PPO and GRPO has made me completely understand them instead of just being "familiar" with them, and I feel better geared to tackle problems that build off of these papers. 
+
+## References
+
+- Williams, [“Simple Statistical Gradient-Following Algorithms for Connectionist Reinforcement Learning”](https://doi.org/10.1007/BF00992696), *Machine Learning* 8, 229–256 (1992).
+- Kakade & Langford, [“Approximately Optimal Approximate Reinforcement Learning”](https://dl.acm.org/doi/10.5555/645531.656005), *Proceedings of the 19th International Conference on Machine Learning*, 267–274 (2002).
+- Schulman et al., [“Trust Region Policy Optimization”](https://proceedings.mlr.press/v37/schulman15.html), *Proceedings of the 32nd International Conference on Machine Learning*, 37:1889–1897 (2015).
+- Schulman et al., [“High-Dimensional Continuous Control Using Generalized Advantage Estimation”](https://arxiv.org/abs/1506.02438), ICLR (2016).
+- Schulman et al., [“Proximal Policy Optimization Algorithms”](https://arxiv.org/abs/1707.06347), arXiv:1707.06347 (2017).
+- Shao et al., [“DeepSeekMath: Pushing the Limits of Mathematical Reasoning in Open Language Models”](https://arxiv.org/abs/2402.03300), arXiv:2402.03300 (2024).
 
