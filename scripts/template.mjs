@@ -10,8 +10,8 @@ export function postPage({ header, title, description, dateISO, dateLabel, body,
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="theme-color" content="#0c0c0c" media="(prefers-color-scheme: dark)" />
-  <meta name="theme-color" content="#f6f4ef" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#141414" media="(prefers-color-scheme: dark)" />
+  <meta name="theme-color" content="#f5f5f3" media="(prefers-color-scheme: light)" />
   <meta name="color-scheme" content="dark light" />
   <title>${esc(title)} · chiyan loo</title>
   <meta name="description" content="${esc(description || title)}" />
