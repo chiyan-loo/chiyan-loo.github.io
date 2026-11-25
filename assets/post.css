@@ -85,7 +85,12 @@ ul { margin: 0; padding: 0; list-style: none; }
 }
 
 /* header */
-.header { display: flex; justify-content: space-between; align-items: center; gap: 1.5rem; }
+.header { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 1.5rem; }
+.header .contact-icons { justify-self: end; }
+@media (max-width: 560px) {
+  .header { grid-template-columns: 1fr auto; row-gap: 1.25rem; }
+  .header .site-nav { grid-row: 2; grid-column: 1 / -1; justify-self: center; }
+}
 .header nav { display: flex; gap: 1.125rem; }
 .header a { transition: color .16s var(--ease); }
 .header nav a { color: var(--muted); }
